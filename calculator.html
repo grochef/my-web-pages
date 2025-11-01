@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Precious Metals Calculator</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+  </style>
+</head>
+<body class="bg-slate-900 text-slate-100 flex items-center justify-center min-h-screen p-4">
+
+  <div id="app" class="max-w-md w-full bg-slate-800 rounded-xl p-8 shadow-2xl space-y-6 transform transition-all duration-300 hover:scale-105">
+    <!-- Header -->
+    <h1 class="text-4xl font-extrabold text-center text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-yellow-600">
+      Precious Metals Calculator
+    </h1>
+    <p class="text-center text-slate-400">
+      Calculate the value of your gold and silver holdings by entering the spot prices.
+    </p>
+
+    <!-- Profile Selection -->
+    <div class="flex flex-col items-center space-y-2">
+      <label for="profile-select" class="text-slate-300 font-semibold">
+        Select Profile:
+      </label>
+      <div class="relative w-full">
+        <select
+          id="profile-select"
+          class="w-full bg-slate-700 text-slate-100 border border-slate-600 rounded-lg py-2 px-4 appearance-none focus:outline-none focus:ring-2 focus:ring-yellow-500 transition-colors"
+        >
+          <option value="gregg">Gregg</option>
+          <option value="elaine">Elaine</option>
+        </select>
+        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-400">
+          <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 6.757 7.586 5.343 9l4.95 4.95z"/></svg>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Spot Price Inputs -->
+    <div class="space-y-4">
+      <div class="flex flex-col space-y-2 bg-slate-700 p-4 rounded-xl shadow-inner border border-slate-600">
+        <h2 class="text-xl font-bold text-center text-slate-200">Enter Spot Prices</h2>
+        <div class="flex items-center justify-between">
+          <label for="gold-spot" class="text-slate-300 font-semibold flex-1">Gold Spot Price ($/oz):</label>
+          <input
+            id="gold-spot"
+            type="number"
+            value="3900"
+            class="bg-slate-800 border border-slate-600 rounded-lg p-2 w-28 text-center text-white focus:outline-none focus:ring-2 focus:ring-yellow-500"
+            step="0.01"
+          />
+        </div>
+        <div class="flex items-center justify-between">
+          <label for="silver-spot" class="text-slate-300 font-semibold flex-1">Silver Spot Price ($/oz):</label>
+          <input
+            id="silver-spot"
+            type="number"
+            value="48"
+            class="bg-slate-800 border border-slate-600 rounded-lg p-2 w-28 text-center text-white focus:outline-none focus:ring-2 focus:focus:ring-yellow-500"
+            step="0.01"
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- Input Fields for Ounces -->
+    <div class="space-y-4">
+      <div class="flex flex-col space-y-4">
+        <div class="flex items-center justify-between">
+          <label for="gold-input" class="text-slate-300 font-semibold flex-1">Gold Ounces (oz):</label>
+          <input
+            id="gold-input"
+            type="number"
+            value="12.7367"
+            class="bg-slate-700 border border-slate-600 rounded-lg p-2 w-28 text-center text-white focus:outline-none focus:ring-2 focus:ring-yellow-500"
+            step="0.01"
+          />
+        </div>
+        <div class="flex items-center justify-between">
+          <label for="silver-input" class="text-slate-300 font-semibold flex-1">Silver Ounces (oz):</label>
+          <input
+            id="silver-input"
+            type="number"
+            value="540"
+            class="bg-slate-700 border border-slate-600 rounded-lg p-2 w-28 text-center text-white focus:outline-none focus:ring-2 focus:ring-yellow-500"
+            step="0.01"
+          />
+        </div>
+      </div>
+
+      <!-- Calculations -->
+      <div class="bg-slate-700 p-4 rounded-xl shadow-inner border border-slate-600">
+        <h2 class="text-xl font-bold text-center text-slate-200 mb-2">Valuation</h2>
+        <div class="flex justify-between items-center text-lg">
+          <span class="font-medium text-yellow-400">Total Gold Value:</span>
+          <span id="gold-value" class="text-white font-bold">$0.00</span>
+        </div>
+        <div class="flex justify-between items-center text-lg mt-1">
+          <span class="font-medium text-slate-400">Total Silver Value:</span>
+          <span id="silver-value" class="text-white font-bold">$0.00</span>
+        </div>
+      </div>
+
+      <!-- Total Value -->
+      <div class="bg-slate-600 p-4 rounded-xl shadow-lg border border-slate-500">
+        <div class="flex justify-between items-center text-2xl font-bold text-yellow-300">
+          <span>Grand Total:</span>
+          <span id="total-value">$0.00</span>
+        </div>
+      </div>
+    </div>
+	<p class="text-sm font-small text-gray-400 text-center"> 
+        <br>Functional concepts by: Gregg Rocheford 
+        <br>Program code generated by Gemini AI (9/14/2025)
+		<br>Version 1.0</p>
+  </div>
+
+  <script>
+    const DEFAULTS = {
+      gregg: { silverOunces: 540, goldOunces: 12.7367 },
+      elaine: { silverOunces: 254, goldOunces: 36.65 },
+    };
+
+    const profileSelect = document.getElementById('profile-select');
+    const goldOuncesInput = document.getElementById('gold-input');
+    const silverOuncesInput = document.getElementById('silver-input');
+    const goldSpotPriceInput = document.getElementById('gold-spot');
+    const silverSpotPriceInput = document.getElementById('silver-spot');
+
+    const goldValueSpan = document.getElementById('gold-value');
+    const silverValueSpan = document.getElementById('silver-value');
+    const totalValueSpan = document.getElementById('total-value');
+
+    const formatCurrency = (value) => {
+      return new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }).format(value);
+    };
+
+    const updateValues = () => {
+      const goldOunces = parseFloat(goldOuncesInput.value) || 0;
+      const silverOunces = parseFloat(silverOuncesInput.value) || 0;
+      const goldSpotPrice = parseFloat(goldSpotPriceInput.value) || 0;
+      const silverSpotPrice = parseFloat(silverSpotPriceInput.value) || 0;
+
+      const goldValue = goldOunces * goldSpotPrice;
+      const silverValue = silverOunces * silverSpotPrice;
+      const totalValue = goldValue + silverValue;
+
+      goldValueSpan.textContent = formatCurrency(goldValue);
+      silverValueSpan.textContent = formatCurrency(silverValue);
+      totalValueSpan.textContent = formatCurrency(totalValue);
+    };
+
+    const updateProfile = () => {
+      const profile = profileSelect.value;
+      if (profile === 'gregg') {
+        goldOuncesInput.value = DEFAULTS.gregg.goldOunces;
+        silverOuncesInput.value = DEFAULTS.gregg.silverOunces;
+      } else {
+        goldOuncesInput.value = DEFAULTS.elaine.goldOunces;
+        silverOuncesInput.value = DEFAULTS.elaine.silverOunces;
+      }
+      updateValues();
+    };
+
+    // Event Listeners
+    profileSelect.addEventListener('change', updateProfile);
+    goldOuncesInput.addEventListener('input', updateValues);
+    silverOuncesInput.addEventListener('input', updateValues);
+    goldSpotPriceInput.addEventListener('input', updateValues);
+    silverSpotPriceInput.addEventListener('input', updateValues);
+
+    // Initial calculation on page load
+    window.onload = updateValues;
+  </script>
+
+</body>
+</html>
